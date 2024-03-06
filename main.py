@@ -23,7 +23,7 @@ def create_summary_pdf(df: pd.DataFrame, output_path: str):
         y_position = page_height - 90
 
         for _, row in group.iterrows():
-            title_lines = row['titulo'].split('\n')
+            title_lines = row['titulo'].upper().split('\n')
             for line in title_lines:
                 if y_position < 50:
                     c.showPage()
@@ -32,7 +32,7 @@ def create_summary_pdf(df: pd.DataFrame, output_path: str):
                 x_position = margin
                 line = " " + line.strip() + " "
                 while c.stringWidth(line, "Times-Bold", 12) > page_width - (2 * margin):
-                    line = line[:-2]
+                    line = line[:-1]  # Remove one character at a time until it fits
                 c.drawString(x_position, y_position, line)
                 y_position -= 15
 
@@ -44,7 +44,7 @@ def create_summary_pdf(df: pd.DataFrame, output_path: str):
             x_position = margin
             authors_line = " " + ", ".join(authors_lines).strip() + " "
             while c.stringWidth(authors_line, "Times-Italic", 10) > page_width - (2 * margin):
-                authors_line = authors_line[:-2]
+                authors_line = authors_line[:-1]  # Remove one character at a time until it fits
             c.drawString(x_position, y_position, authors_line)
             y_position -= 20
 
