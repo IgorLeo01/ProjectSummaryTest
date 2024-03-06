@@ -50,14 +50,14 @@ def create_summary_pdf(df: pd.DataFrame, output_path: str):
 
             y_position -= 15
 
-        y_position -= 40
+        c.showPage()
 
     c.save()
 
     webbrowser.open(output_path)
 
 if __name__ == "__main__":
-    csv_path = r'ProjectSummaryTest\trabalhos4.csv'
+    csv_path = r'trabalhos4.csv'
 
     df = pd.read_csv(csv_path, delimiter=';')
     create_summary_pdf(df, 'output.pdf')
