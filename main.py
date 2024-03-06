@@ -14,6 +14,8 @@ def create_summary_pdf(df: pd.DataFrame, output_path: str):
 
     page_width, page_height = custom_page_size
 
+    max_width = page_width - (margin *2)
+
     for area, group in df.groupby('area'):
         c.setFont("Times-Bold", 16)  # Alterando a fonte para Times New Roman e negrito
         area_title = area
@@ -31,9 +33,21 @@ def create_summary_pdf(df: pd.DataFrame, output_path: str):
                 c.setFont("Times-Bold", 12)  # Alterando a fonte para Times New Roman e negrito
                 x_position = margin
                 line = " " + line.strip() + " "
-                while c.stringWidth(line, "Times-Bold", 12) > page_width - (2 * margin):
-                    line = line[:-2]
-                c.drawString(x_position, y_position, line)
+                words = line.split()
+                new_line = ''
+                for word in words:
+                    width = c.stringWidth(new_line + " " + word)
+                    if width <= max_width:
+                        new_line += " " + word
+                    else:
+                        c.drawString(x_position, y_position, new_line.strip())
+                        y_position -= 15
+                        new_line = word
+                # while c.stringWidth(line, "Times-Bold", 12) > page_width - (2 * margin):
+                #     line = line[:-2]
+                
+                c.setLineWidth(page_width - (margin * 2))
+                c.drawString(x_position, y_position, new_line)
                 y_position -= 15
 
             authors_lines = row['autores'].split(', ')
